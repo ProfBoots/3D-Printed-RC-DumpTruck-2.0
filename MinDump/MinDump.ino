@@ -1,17 +1,19 @@
-//make sure to upload with ESP32 Dev Module selected as the board under tools>Board>ESP32 Arduino
+// make sure to upload with ESP32 Dev Module selected as the board under tools>Board>ESP32 Arduino
 
 #include <Arduino.h>
-#ifdef ESP32
-#include <WiFi.h>
-#include <AsyncTCP.h> //by dvarrel
-#elif defined(ESP8266)
-#include <ESPAsyncTCP.h> //by dvarrel
-#endif
-#include <ESPAsyncWebSrv.h> //by dvarrel
 
-#include <ESP32Servo.h> //by Kevin Harrington
+#include <ESP32Servo.h> // by Kevin Harrington
+#include <ESPAsyncWebSrv.h> // by dvarrel
 #include <iostream>
 #include <sstream>
+
+#ifdef ESP32
+#include <AsyncTCP.h> // by dvarrel
+#include <WiFi.h>
+#elif defined(ESP8266)
+#include <ESPAsyncTCP.h> // by dvarrel
+#endif
+
 
 const char* ssid     = "ProfBoots MiniDump 1";
 
