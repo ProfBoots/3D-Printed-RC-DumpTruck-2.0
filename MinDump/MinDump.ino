@@ -86,7 +86,7 @@ void rotateMotor(int motorNumber, int motorDirection)
 void moveCar(int inputValue)
 {
   Serial.printf("Got value as %d\n", inputValue);
-  if(!(horizontalScreen))
+  if(!horizontalScreen)
   {
     switch(inputValue)
     {
