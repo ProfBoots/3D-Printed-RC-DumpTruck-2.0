@@ -14,25 +14,10 @@
 #include <ESPAsyncTCP.h> // by dvarrel
 #endif
 
-const char* ssid     = "ProfBoots MiniDump 1";
+// Defines
 
 #define steeringServoPin  23
 #define dumpServoPin 22
-
-Servo steeringServo;
-Servo dumpServo;
-
-int dumpBedServoValue = 185;
-struct MOTOR_PINS
-{
-  int pinIN1;
-  int pinIN2;
-};
-
-std::vector<MOTOR_PINS> motorPins =
-{
-  {25, 26},  //N20 Motor Pins(IN1, IN2)
-};
 
 #define UP 1
 #define DOWN 2
@@ -49,13 +34,35 @@ std::vector<MOTOR_PINS> motorPins =
 #define FORWARD 1
 #define BACKWARD -1
 
+// Custom data types
+
+struct MOTOR_PINS
+{
+  int pinIN1;
+  int pinIN2;
+};
+
+// Global constants
+
+extern const char* htmlHomePage PROGMEM;
+const char* ssid = "ProfBoots MiniDump 1";
+
+// Global variables
+
+std::vector<MOTOR_PINS> motorPins =
+{
+  {25, 26},  //N20 Motor Pins(IN1, IN2)
+};
+
+Servo steeringServo;
+Servo dumpServo;
+
+int dumpBedServoValue = 185;
 bool horizontalScreen;//When screen orientation is locked vertically this rotates the D-Pad controls so that forward would now be left.
 bool removeArmMomentum = false;
 
 AsyncWebServer server(80);
 AsyncWebSocket wsCarInput("/CarInput");
-
-extern const char* htmlHomePage PROGMEM;
 
 void rotateMotor(int motorNumber, int motorDirection)
 {
