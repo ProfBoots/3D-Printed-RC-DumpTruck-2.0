@@ -14,12 +14,9 @@
 #include <ESPAsyncTCP.h> // by dvarrel
 #endif
 
-
 const char* ssid     = "ProfBoots MiniDump 1";
 
-
 #define steeringServoPin  23
-
 #define dumpServoPin 22
 
 Servo steeringServo;
@@ -45,7 +42,6 @@ std::vector<MOTOR_PINS> motorPins =
 #define ARMDOWN 6
 #define STOP 0
 
-
 #define RIGHT_MOTOR 1
 #define LEFT_MOTOR 0
 #define ARM_MOTOR 2
@@ -55,8 +51,6 @@ std::vector<MOTOR_PINS> motorPins =
 
 bool horizontalScreen;//When screen orientation is locked vertically this rotates the D-Pad controls so that forward would now be left.
 bool removeArmMomentum = false;
-
-
 
 AsyncWebServer server(80);
 AsyncWebSocket wsCarInput("/CarInput");
@@ -87,92 +81,94 @@ void moveCar(int inputValue)
   Serial.printf("Got value as %d\n", inputValue);
   if(!(horizontalScreen))
   {
-  switch(inputValue)
-  {
+    switch(inputValue)
+    {
+      case UP:
+        rotateMotor(RIGHT_MOTOR, FORWARD);
+        rotateMotor(LEFT_MOTOR, FORWARD);
+        break;
 
-    case UP:
-      rotateMotor(RIGHT_MOTOR, FORWARD);
-      rotateMotor(LEFT_MOTOR, FORWARD);
-      break;
+      case DOWN:
+        rotateMotor(RIGHT_MOTOR, BACKWARD);
+        rotateMotor(LEFT_MOTOR, BACKWARD);
+        break;
 
-    case DOWN:
-      rotateMotor(RIGHT_MOTOR, BACKWARD);
-      rotateMotor(LEFT_MOTOR, BACKWARD);
-      break;
+      case LEFT:
+        rotateMotor(RIGHT_MOTOR, BACKWARD);
+        rotateMotor(LEFT_MOTOR, FORWARD);
+        break;
 
-    case LEFT:
-      rotateMotor(RIGHT_MOTOR, BACKWARD);
-      rotateMotor(LEFT_MOTOR, FORWARD);
-      break;
+      case RIGHT:
+        rotateMotor(RIGHT_MOTOR, FORWARD);
+        rotateMotor(LEFT_MOTOR, BACKWARD);
+        break;
 
-    case RIGHT:
-      rotateMotor(RIGHT_MOTOR, FORWARD);
-      rotateMotor(LEFT_MOTOR, BACKWARD);
-      break;
+      case STOP:
+        rotateMotor(RIGHT_MOTOR, STOP);
+        rotateMotor(LEFT_MOTOR, STOP);
+        break;
 
-    case STOP:
-      rotateMotor(RIGHT_MOTOR, STOP);
-      rotateMotor(LEFT_MOTOR, STOP);
-      break;
-
-    default:
-      rotateMotor(RIGHT_MOTOR, STOP);
-      rotateMotor(LEFT_MOTOR, STOP);
-      break;
+      default:
+        rotateMotor(RIGHT_MOTOR, STOP);
+        rotateMotor(LEFT_MOTOR, STOP);
+        break;
+    }
   }
-  }else {
-      switch(inputValue)
+  else
   {
-     case UP:
-      rotateMotor(RIGHT_MOTOR, BACKWARD);
-      rotateMotor(LEFT_MOTOR, FORWARD);
-      break;
+    switch(inputValue)
+    {
+      case UP:
+        rotateMotor(RIGHT_MOTOR, BACKWARD);
+        rotateMotor(LEFT_MOTOR, FORWARD);
+        break;
 
-    case DOWN:
-      rotateMotor(RIGHT_MOTOR, FORWARD);
-      rotateMotor(LEFT_MOTOR, BACKWARD);
-      break;
+      case DOWN:
+        rotateMotor(RIGHT_MOTOR, FORWARD);
+        rotateMotor(LEFT_MOTOR, BACKWARD);
+        break;
 
-    case LEFT:
-      rotateMotor(RIGHT_MOTOR, BACKWARD);
-      rotateMotor(LEFT_MOTOR, BACKWARD);
-      break;
+      case LEFT:
+        rotateMotor(RIGHT_MOTOR, BACKWARD);
+        rotateMotor(LEFT_MOTOR, BACKWARD);
+        break;
 
-    case RIGHT:
-      rotateMotor(RIGHT_MOTOR, FORWARD);
-      rotateMotor(LEFT_MOTOR, FORWARD);
-      break;
+      case RIGHT:
+        rotateMotor(RIGHT_MOTOR, FORWARD);
+        rotateMotor(LEFT_MOTOR, FORWARD);
+        break;
 
-    case STOP:
-      rotateMotor(ARM_MOTOR, STOP);
-      rotateMotor(RIGHT_MOTOR, STOP);
-      rotateMotor(LEFT_MOTOR, STOP);
-      break;
+      case STOP:
+        rotateMotor(ARM_MOTOR, STOP);
+        rotateMotor(RIGHT_MOTOR, STOP);
+        rotateMotor(LEFT_MOTOR, STOP);
+        break;
 
-    case ARMUP:
-      rotateMotor(ARM_MOTOR, FORWARD);
-      break;
+      case ARMUP:
+        rotateMotor(ARM_MOTOR, FORWARD);
+        break;
 
-    case ARMDOWN:
-      rotateMotor(ARM_MOTOR, BACKWARD);
-      removeArmMomentum = true;
-      break; 
+      case ARMDOWN:
+        rotateMotor(ARM_MOTOR, BACKWARD);
+        removeArmMomentum = true;
+        break; 
 
-    default:
-      rotateMotor(ARM_MOTOR, STOP);
-      rotateMotor(RIGHT_MOTOR, STOP);
-      rotateMotor(LEFT_MOTOR, STOP);
-      break;
-  }
+      default:
+        rotateMotor(ARM_MOTOR, STOP);
+        rotateMotor(RIGHT_MOTOR, STOP);
+        rotateMotor(LEFT_MOTOR, STOP);
+        break;
+    }
   }
 }
-
 
 void steeringControl(int steeringServoValue)
 {
   steeringServo.write(steeringServoValue);
 }
-void dumpControl(int dumpServoValue){
+
+void dumpControl(int dumpServoValue)
+{
   if(dumpServoValue == 5 && dumpBedServoValue < 185)
   {
     dumpBedServoValue = dumpBedServoValue + 5;
@@ -184,6 +180,7 @@ void dumpControl(int dumpServoValue){
     dumpServo.write(dumpBedServoValue);
   }
 }
+
 void throttleControl(int throttleValue)
 {
   if(throttleValue > 15)
@@ -204,7 +201,6 @@ void throttleControl(int throttleValue)
   }
 }
 
-
 void handleRoot(AsyncWebServerRequest *request)
 {
   request->send_P(200, "text/html", htmlHomePage);
@@ -212,7 +208,7 @@ void handleRoot(AsyncWebServerRequest *request)
 
 void handleNotFound(AsyncWebServerRequest *request)
 {
-    request->send(404, "text/plain", "File Not Found");
+  request->send(404, "text/plain", "File Not Found");
 }
 
 void onCarInputWebSocketEvent(AsyncWebSocket *server,
@@ -272,7 +268,6 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server,
 
 void setUpPinModes()
 {
-
   for (int i = 0; i < motorPins.size(); i++)
   {   
     pinMode(motorPins[i].pinIN1, OUTPUT);
@@ -304,8 +299,6 @@ void setup(void)
 
   server.begin();
   Serial.println("HTTP server started");
-
-
 }
 
 void loop()
