@@ -14,7 +14,7 @@
 #include <ESPAsyncTCP.h> // by dvarrel
 #endif
 
-// Defines
+// defines
 
 #define steeringServoPin  23
 #define dumpServoPin 22
@@ -34,7 +34,7 @@
 #define FORWARD 1
 #define BACKWARD -1
 
-// Custom data types
+// custom data types
 
 struct MOTOR_PINS
 {
@@ -42,23 +42,23 @@ struct MOTOR_PINS
   int pinIN2;
 };
 
-// Global constants
+// global constants
 
 extern const char* htmlHomePage PROGMEM;
 const char* ssid = "ProfBoots MiniDump 1";
 
-// Global variables
+// global variables
 
 std::vector<MOTOR_PINS> motorPins =
 {
-  {25, 26},  //N20 Motor Pins(IN1, IN2)
+  {25, 26},  // N20 Motor Pins(IN1, IN2)
 };
 
 Servo steeringServo;
 Servo dumpServo;
 
 int dumpBedServoValue = 185;
-bool horizontalScreen;//When screen orientation is locked vertically this rotates the D-Pad controls so that forward would now be left.
+bool horizontalScreen; // when screen orientation is locked vertically this rotates the D-Pad controls so that forward would now be left.
 bool removeArmMomentum = false;
 
 AsyncWebServer server(80);
