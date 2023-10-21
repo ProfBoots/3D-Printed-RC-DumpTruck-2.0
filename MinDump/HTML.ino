@@ -1,6 +1,4 @@
-/**
- * This file contains the HTML data for the ESP32.
- */
+// This file contains the HTML data for the ESP32.
 
 const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
 <!DOCTYPE html>
