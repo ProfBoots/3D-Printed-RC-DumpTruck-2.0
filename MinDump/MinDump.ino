@@ -7,7 +7,7 @@
 #include <iostream>
 #include <sstream>
 
-#ifdef ESP32
+#if defined(ESP32)
 #include <AsyncTCP.h> // by dvarrel
 #include <WiFi.h>
 #elif defined(ESP8266)
