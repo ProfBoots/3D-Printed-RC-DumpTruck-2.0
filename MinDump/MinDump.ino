@@ -68,56 +68,56 @@ void rotateMotor(int motorNumber, int motorDirection)
   if (motorDirection == FORWARD)
   {
     digitalWrite(motorPins[motorNumber].pinIN1, HIGH);
-    digitalWrite(motorPins[motorNumber].pinIN2, LOW);    
+    digitalWrite(motorPins[motorNumber].pinIN2, LOW);
   }
   else if (motorDirection == BACKWARD)
   {
     digitalWrite(motorPins[motorNumber].pinIN1, LOW);
-    digitalWrite(motorPins[motorNumber].pinIN2, HIGH);     
+    digitalWrite(motorPins[motorNumber].pinIN2, HIGH);
   }
   else
   {
     digitalWrite(motorPins[motorNumber].pinIN1, LOW);
-    digitalWrite(motorPins[motorNumber].pinIN2, LOW);       
+    digitalWrite(motorPins[motorNumber].pinIN2, LOW);
   }
 }
 
 void moveCar(int inputValue)
 {
-  Serial.printf("Got value as %d\n", inputValue); 
+  Serial.printf("Got value as %d\n", inputValue);
   if(!(horizontalScreen))
-  { 
+  {
   switch(inputValue)
   {
 
     case UP:
       rotateMotor(RIGHT_MOTOR, FORWARD);
-      rotateMotor(LEFT_MOTOR, FORWARD);                  
+      rotateMotor(LEFT_MOTOR, FORWARD);
       break;
-  
+
     case DOWN:
       rotateMotor(RIGHT_MOTOR, BACKWARD);
-      rotateMotor(LEFT_MOTOR, BACKWARD);  
+      rotateMotor(LEFT_MOTOR, BACKWARD);
       break;
-  
+
     case LEFT:
       rotateMotor(RIGHT_MOTOR, BACKWARD);
-      rotateMotor(LEFT_MOTOR, FORWARD);  
+      rotateMotor(LEFT_MOTOR, FORWARD);
       break;
-  
+
     case RIGHT:
       rotateMotor(RIGHT_MOTOR, FORWARD);
-      rotateMotor(LEFT_MOTOR, BACKWARD); 
+      rotateMotor(LEFT_MOTOR, BACKWARD);
       break;
 
     case STOP:
       rotateMotor(RIGHT_MOTOR, STOP);
-      rotateMotor(LEFT_MOTOR, STOP);    
+      rotateMotor(LEFT_MOTOR, STOP);
       break;
-      
-    default:   
+
+    default:
       rotateMotor(RIGHT_MOTOR, STOP);
-      rotateMotor(LEFT_MOTOR, STOP); 
+      rotateMotor(LEFT_MOTOR, STOP);
       break;
   }
   }else {
@@ -125,43 +125,43 @@ void moveCar(int inputValue)
   {
      case UP:
       rotateMotor(RIGHT_MOTOR, BACKWARD);
-      rotateMotor(LEFT_MOTOR, FORWARD);                  
+      rotateMotor(LEFT_MOTOR, FORWARD);
       break;
-  
+
     case DOWN:
       rotateMotor(RIGHT_MOTOR, FORWARD);
-      rotateMotor(LEFT_MOTOR, BACKWARD);  
+      rotateMotor(LEFT_MOTOR, BACKWARD);
       break;
-  
+
     case LEFT:
       rotateMotor(RIGHT_MOTOR, BACKWARD);
-      rotateMotor(LEFT_MOTOR, BACKWARD);  
+      rotateMotor(LEFT_MOTOR, BACKWARD);
       break;
-  
+
     case RIGHT:
       rotateMotor(RIGHT_MOTOR, FORWARD);
-      rotateMotor(LEFT_MOTOR, FORWARD); 
+      rotateMotor(LEFT_MOTOR, FORWARD);
       break;
 
     case STOP:
-      rotateMotor(ARM_MOTOR, STOP); 
+      rotateMotor(ARM_MOTOR, STOP);
       rotateMotor(RIGHT_MOTOR, STOP);
-      rotateMotor(LEFT_MOTOR, STOP);    
+      rotateMotor(LEFT_MOTOR, STOP);
       break;
 
     case ARMUP:
-      rotateMotor(ARM_MOTOR, FORWARD); 
+      rotateMotor(ARM_MOTOR, FORWARD);
       break;
-      
+
     case ARMDOWN:
       rotateMotor(ARM_MOTOR, BACKWARD);
       removeArmMomentum = true;
       break; 
-      
+
     default:
-      rotateMotor(ARM_MOTOR, STOP);    
+      rotateMotor(ARM_MOTOR, STOP);
       rotateMotor(RIGHT_MOTOR, STOP);
-      rotateMotor(LEFT_MOTOR, STOP); 
+      rotateMotor(LEFT_MOTOR, STOP);
       break;
   }
   }
@@ -170,7 +170,7 @@ void moveCar(int inputValue)
 
 void steeringControl(int steeringServoValue)
 {
-  steeringServo.write(steeringServoValue); 
+  steeringServo.write(steeringServoValue);
 }
 void dumpControl(int dumpServoValue){
   if(dumpServoValue == 5 && dumpBedServoValue < 185)
@@ -205,23 +205,23 @@ void throttleControl(int throttleValue)
 }
 
 
-void handleRoot(AsyncWebServerRequest *request) 
+void handleRoot(AsyncWebServerRequest *request)
 {
   request->send_P(200, "text/html", htmlHomePage);
 }
 
-void handleNotFound(AsyncWebServerRequest *request) 
+void handleNotFound(AsyncWebServerRequest *request)
 {
     request->send(404, "text/plain", "File Not Found");
 }
 
-void onCarInputWebSocketEvent(AsyncWebSocket *server, 
-                      AsyncWebSocketClient *client, 
+void onCarInputWebSocketEvent(AsyncWebSocket *server,
+                      AsyncWebSocketClient *client,
                       AwsEventType type,
-                      void *arg, 
-                      uint8_t *data, 
-                      size_t len) 
-{                      
+                      void *arg,
+                      uint8_t *data,
+                      size_t len)
+{
   switch (type) 
   {
     case WS_EVT_CONNECT:
@@ -234,7 +234,7 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server,
     case WS_EVT_DATA:
       AwsFrameInfo *info;
       info = (AwsFrameInfo*)arg;
-      if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT) 
+      if (info->final && info->index == 0 && info->len == len && info->opcode == WS_TEXT)
       {
         std::string myData = "";
         myData.assign((char *)data, len);
@@ -242,11 +242,11 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server,
         std::string key, value;
         std::getline(ss, key, ',');
         std::getline(ss, value, ',');
-        Serial.printf("Key [%s] Value[%s]\n", key.c_str(), value.c_str()); 
-        int valueInt = atoi(value.c_str());     
+        Serial.printf("Key [%s] Value[%s]\n", key.c_str(), value.c_str());
+        int valueInt = atoi(value.c_str());
         if (key == "MoveCar")
         {
-          moveCar(valueInt);        
+          moveCar(valueInt);
         }
         else if (key == "steering")
         {
@@ -254,7 +254,7 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server,
         }
         else if (key == "throttle")
         {
-          throttleControl(valueInt);        
+          throttleControl(valueInt);
         }
         else if (key == "dump")
         {
@@ -266,17 +266,17 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server,
     case WS_EVT_ERROR:
       break;
     default:
-      break;  
+      break;
   }
 }
 
 void setUpPinModes()
 {
-      
+
   for (int i = 0; i < motorPins.size(); i++)
   {   
     pinMode(motorPins[i].pinIN1, OUTPUT);
-    pinMode(motorPins[i].pinIN2, OUTPUT);  
+    pinMode(motorPins[i].pinIN2, OUTPUT);
   }
   moveCar(STOP);
   steeringServo.attach(steeringServoPin);
@@ -298,17 +298,17 @@ void setup(void)
 
   server.on("/", HTTP_GET, handleRoot);
   server.onNotFound(handleNotFound);
-      
+
   wsCarInput.onEvent(onCarInputWebSocketEvent);
   server.addHandler(&wsCarInput);
 
   server.begin();
   Serial.println("HTTP server started");
-  
+
 
 }
 
-void loop() 
+void loop()
 {
-  wsCarInput.cleanupClients(); 
+  wsCarInput.cleanupClients();
 }
