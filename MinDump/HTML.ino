@@ -23,7 +23,7 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
   background-color: black; /* Background color of the button */
   box-shadow: 5px 5px #888888;
   color: grey; /* Text color */
-  padding: 30px 40px; /* Padding for the button */
+  padding: 30px 35px; /* Padding for the button */
   border: none; /* Remove the button border */
   border-radius: 20%; /* Rounded corners */
   font-size: 24px; /* Font size */
@@ -31,6 +31,7 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
   transform: rotate(90deg); /* Rotate the text vertically */
   transform-origin: left center; /* Adjust the origin to change the rotation pivot */
   margin-left: 60px;
+  margin-top: 55px;
 }
     .auxButton:active {
       transform: translate(-5px,5px);
@@ -132,7 +133,7 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
     </style>
   
   </head>
-  <body class="noselect" align="center" style="background-color:white" >
+  <body class="noselect" align="center" style="background-color:white; overflow: hidden;" >
     <h1 style="color: black; text-align:center;">MINI-DUMP</h1>
     
     <table id="mainTable" style="width:400px;margin:auto;table-layout:fixed" CELLSPACING=10>
@@ -168,12 +169,24 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
   <td style="text-align: left; font-size: 25px"><b></b></td>
   <td>
     <div class="vertical-slider-container">
-      <input type="range" min="60" max="140" value="100" class="vertical-slider" id="steering" oninput='sendButtonInput("steering", value)'>
+      <input type="range" min="58" max="122" value="90" class="vertical-slider" id="steering" oninput='sendButtonInput("steering", value)'>
     </div>
   </td>
   <td>
-    <button id="auxButton" class="auxButton">AUX</button>
-  </td>
+    <button id="auxButton" class="auxButton"
+    ontouchstart='startSendingButtonInput("aux", "2")'
+    onmousedown='startSendingButtonInput("aux", "2")'
+    ontouchend='stopSendingButtonInput()'
+    onmouseup='stopSendingButtonInput()'>AUX2</button>
+    <button id="auxButton" class="auxButton"
+    ontouchstart='startSendingButtonInput("aux", "1")'
+    onmousedown='startSendingButtonInput("aux", "1")'
+    ontouchend='stopSendingButtonInput()'
+    onmouseup='stopSendingButtonInput()'>AUX</button>
+</td>
+<tr/>
+<tr/>
+</tr>
 </tr>
     </table>
   
@@ -208,35 +221,47 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
     clearInterval(intervalId); // Stop sending the input when the button is released
 }
       function handleKeyDown(event) {
-        if (event.keyCode === 38) {
-            sendButtonInput("MoveCar", "1");
-        }
-        if (event.keyCode === 40)
+        if (event.keyCode ===88)
         {
-          sendButtonInput("MoveCar", "2");
+          sendButtonInput("aux", "1");
         }
-        if (event.keyCode ===37)
+        if (event.keyCode === 81)
         {
-          sendButtonInput("MoveCar", "3");
+          sendButtonInput("dump", "5");
         }
-        if (event.keyCode ===39)
+        if (event.keyCode === 69)
         {
-          sendButtonInput("MoveCar", "4");
+          sendButtonInput("dump", "6");
         }
-        if (event.keyCode === 87)
+        if(event.keyCode === 87)
         {
-          sendButtonInput("MoveCar", "5");
+          throttleSlider.value = parseInt(throttleSlider.value) + 255; // You can adjust the increment value as needed
+          sendButtonInput("throttle",throttleSlider.value);
+      // Trigger the 'input' event on the slider to update its value
+          throttleSlider.dispatchEvent(new Event('input'));
         }
-        if (event.keyCode === 83)
+        if(event.keyCode === 83)
         {
-          sendButtonInput("MoveCar", "6");
+          throttleSlider.value = parseInt(throttleSlider.value) - 255; // You can adjust the increment value as needed
+          sendButtonInput("throttle",throttleSlider.value);
+      // Trigger the 'input' event on the slider to update its value
+          throttleSlider.dispatchEvent(new Event('input'));
         }
+        if(event.keyCode === 65)
+        {
+          steeringSlider.value = parseInt(steeringSlider.value) + 30; // You can adjust the increment value as needed
+          sendButtonInput("steering",steeringSlider.value);
+      // Trigger the 'input' event on the slider to update its value
+          steeringSlider.dispatchEvent(new Event('input'));
         }
-      function handleKeyUp(event) {
-        if (event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 39 || event.keyCode === 40 || event.keyCode === 87 || event.keyCode === 83) {
-            sendButtonInput("MoveCar", "0");
+        if(event.keyCode === 68)
+        {
+          steeringSlider.value = parseInt(steeringSlider.value) - 30; // You can adjust the increment value as needed
+          sendButtonInput("steering",steeringSlider.value);
+      // Trigger the 'input' event on the slider to update its value
+          steeringSlider.dispatchEvent(new Event('input'));
         }
-    }  
+        }  
       
   
       window.onload = initCarInputWebSocket;
