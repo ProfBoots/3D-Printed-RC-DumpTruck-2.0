@@ -203,10 +203,8 @@ void setUpPinModes()
 {
   pinMode(lightPin1, OUTPUT);
   pinMode(lightPin2, OUTPUT); 
-  steeringServo.attach(steeringServoPin);
-  dumpServo.attach(dumpServoPin);
   steeringControl(90);
-  dumpServo.write(dumpBedServoValue);
+  dumpControl(5);
 }
 
 
