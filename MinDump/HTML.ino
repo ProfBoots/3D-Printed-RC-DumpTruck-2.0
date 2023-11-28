@@ -214,7 +214,7 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
     sendButtonInput(action, value); // Send the initial input when the button is pressed
     intervalId = setInterval(function() {
         sendButtonInput(action, value); // Continuously send the input as long as the button is pressed
-    }, 50); // You can adjust the interval (in milliseconds) to control the rate of sending
+    }, 10); // You can adjust the interval (in milliseconds) to control the rate of sending
     }
 
     function stopSendingButtonInput() {
