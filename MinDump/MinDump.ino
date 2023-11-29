@@ -203,8 +203,9 @@ void setUpPinModes()
 {
   pinMode(lightPin1, OUTPUT);
   pinMode(lightPin2, OUTPUT); 
-  steeringControl(90);
   dumpControl(5);
+  delay(50);
+  steeringControl(80);
 }
 
 
