@@ -60,6 +60,7 @@ void steeringControl(int steeringServoValue)
   if(dumpServo.attached())
   {
    dumpServo.detach();
+    delay(150);
   }
   if(!(steeringServo.attached()))
   {
@@ -73,6 +74,7 @@ void dumpControl(int dumpServoValue)
    if(steeringServo.attached())
   {
    steeringServo.detach();
+    delay(150);
   }
   if(!(dumpServo.attached()))
   {
