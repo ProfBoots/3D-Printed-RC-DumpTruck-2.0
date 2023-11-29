@@ -169,7 +169,7 @@ const char* htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
   <td style="text-align: left; font-size: 25px"><b></b></td>
   <td>
     <div class="vertical-slider-container">
-      <input type="range" min="58" max="122" value="90" class="vertical-slider" id="steering" oninput='sendButtonInput("steering", value)'>
+      <input type="range" min="48" max="112" value="80" class="vertical-slider" id="steering" oninput='sendButtonInput("steering", value)'>
     </div>
   </td>
   <td>
